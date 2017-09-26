@@ -1,15 +1,15 @@
 // isFlagged, isHidden, isBomb, setBomb,
 class Tile {
-  constructor(value){
+  constructor(isBomb){
     this.isFlagged = false;
     this.isHidden = true;
-    this.isBomb = false;
+    this.isBomb = isBomb;
   }
 
   toggleFlag(){
     if (!this.hidden)
       return;
-    if (this.flagged){
+    else if (this.flagged){
       Tile.prototype.flaggedCount -= 1;
       this.flagged = false;
     } else {
