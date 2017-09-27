@@ -6,14 +6,21 @@ class Board {
     this.grid = Array.new(rows * cols);
   }
 
+  validate(idx){
+    if (this.isOnBoard(idx) && this.grid(idx).isHidden)
+      return;
+    else throw "Out of bounds";
+  }
+
   surrounding(idx){
     const north = idx-cols, south = idx+cols, east = idx+1, west = idx-1;
     const allPos = [north-1, north, north+1, east, south+1, south, south-1, west];
     return allPos.filter(this.isOnBoard);
   }
 
+
   isOnBoard(idx){
-    return idx >= 0 && idx < this.grid.length; 
+    return idx >= 0 && idx < this.grid.length;
   }
 
   index(row, col){

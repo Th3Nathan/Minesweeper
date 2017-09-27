@@ -1,38 +1,62 @@
 'use strict'
 //reset, status, initialize(board), isWon, getMove, playMove, updateStatus (points, frozen), getTileValue,
+const readline = () => {
+  return require("readline").createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+}
+
 class Game {
   constructor(board){
     this.board = board;
   }
 
-  parsePos(str){
-
+  inputToRowCol(str){
+    const row, col = str[0], str[str.length - 1];
+    return {row, col};
   };
 
   getMove(){
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
+    return new Promise((res, rej) => {
+      const rl = readline();
+      rl.question('Select a row and column eg "1 1" is top left corner', (input) => {
+        rl.close();
+        try {
+          if (input == 'hello'){
+            rej("Lets go to the catch block in printMove");
+          } else if (input == 'bobby') {
+            throw "Lets go to the catch block in getMove";
+          } else res(input);
+        } catch(e){
+          console.log("Invalid entry, please enter in the form 2 4 where two is the row and 4 is the column");
+          printMove();
+        }
+      });
     });
-    rl.question('Select a row and column eg 1 1 is top left corner', (input) => {
+    return rl.question('Select a row and column eg "1 1" is top left corner', (input) => {
       rl.close();
       try {
-        let pos = new Position(input);
-        this.board.validate(pos); //will throw error if no good
-        return pos;
-      } catch (e){
-        console.log("Invalid space, try again");
-        return this.getMove();
+        const rowCol = this.inputToRowCol();
+      } catch(e){
+        console.log("Invalid entry, please enter in the form 2 4 where two is the row and 4 is the column");
+        this.getMove();
       }
-    });
+    }
   }
 
-  validateMove(position){
-
+  parseMove(rowCol){
+    const idx = this.board.idxFromRowCol(rowCol);
+    if (this.board.validIdx(idx)) {
+      return pos;
+    }
+    else {
+      console.log("Invalid space, try again");
+      return this.getMove();
+    }
   }
 
   playTurn(){
-    //should call itself after getting
   }
 }
 // let g = new Game(8);
