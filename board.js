@@ -6,6 +6,10 @@ class Board {
     this.grid = Array.new(rows * cols);
   }
 
+  isOpen(idx){
+    return this.grid[idx].isRevealed;
+  }
+
   validate(idx){
     if (this.isOnBoard(idx) && this.grid(idx).isHidden)
       return;

@@ -13,7 +13,10 @@ class Game {
   }
 
   inputToRowCol(str){
-    const row, col = str[0], str[str.length - 1];
+    const splitStr = "1 33".split(" ");
+    if (splitStr.length != 2) throw "Invalid Input";
+    const row, col = parseInt(splitStr[0]), parseInt(splitStr[1]);
+    if (isNaN(row) || isNaN(col)) throw "Not nums";
     return {row, col};
   };
 
@@ -23,40 +26,39 @@ class Game {
       rl.question('Select a row and column eg "1 1" is top left corner', (input) => {
         rl.close();
         try {
-          if (input == 'hello'){
-            rej("Lets go to the catch block in printMove");
-          } else if (input == 'bobby') {
-            throw "Lets go to the catch block in getMove";
-          } else res(input);
+          const rowCol = this.inputToRowCol(input);
+          res(rowCol);
         } catch(e){
           console.log("Invalid entry, please enter in the form 2 4 where two is the row and 4 is the column");
-          printMove();
+          this.playTurn();
         }
       });
     });
-    return rl.question('Select a row and column eg "1 1" is top left corner', (input) => {
-      rl.close();
-      try {
-        const rowCol = this.inputToRowCol();
-      } catch(e){
-        console.log("Invalid entry, please enter in the form 2 4 where two is the row and 4 is the column");
-        this.getMove();
-      }
+  }
+
+  parseRowCol(rowCol){
+    try const idx = this.board.index(rowCol);
+    catch(e) {
+      console.log("Selected space is not on the board! Try again");
+      this.playTurn();
     }
   }
 
-  parseMove(rowCol){
-    const idx = this.board.idxFromRowCol(rowCol);
-    if (this.board.validIdx(idx)) {
-      return pos;
-    }
+  makeMove(){
+    console.log("YOU MADE A MOVVVE SUCCESS");
+  }
+
+  async playTurn(){
+    const rowCol = await this.getMove();
+    const idx = await this.parseRowCol(rowCol);
+    const tile = this.board.grid[idx]
+    if (tile.isHidden)
+      const action = tile.getAction();//flag or open
     else {
-      console.log("Invalid space, try again");
-      return this.getMove();
+      console.log("Nah yo, this spot has already been opened!")
+      return playTurn();
     }
-  }
-
-  playTurn(){
+    this.makeMove(idx, action);
   }
 }
 // let g = new Game(8);
