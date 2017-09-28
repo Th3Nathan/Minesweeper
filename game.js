@@ -1,4 +1,6 @@
 'use strict'
+const Board = require("./board.js").Board;
+const Tile = require("./tile.js").Tile;
 //reset, status, initialize(board), isWon, getMove, playMove, updateStatus (points, frozen), getTileValue,
 const readline = () => {
   return require("readline").createInterface({
@@ -13,9 +15,10 @@ class Game {
   }
 
   inputToRowCol(str){
-    const splitStr = "1 33".split(" ");
+    const splitStr = str.split(" ");
     if (splitStr.length != 2) throw "Invalid Input";
-    const row, col = parseInt(splitStr[0]), parseInt(splitStr[1]);
+    const row = parseInt(splitStr[0]);
+    const col = parseInt(splitStr[1]);
     if (isNaN(row) || isNaN(col)) throw "Not nums";
     return {row, col};
   };
@@ -37,11 +40,7 @@ class Game {
   }
 
   parseRowCol(rowCol){
-    try const idx = this.board.index(rowCol);
-    catch(e) {
-      console.log("Selected space is not on the board! Try again");
-      this.playTurn();
-    }
+    return this.board.index(rowCol);
   }
 
   makeMove(){
@@ -50,10 +49,17 @@ class Game {
 
   async playTurn(){
     const rowCol = await this.getMove();
-    const idx = await this.parseRowCol(rowCol);
-    const tile = this.board.grid[idx]
+    let idx;
+    try {
+      idx = this.parseRowCol(rowCol);
+    } catch(e){
+      console.log("Selected space is not on the board! Try again");
+      return this.playTurn();
+    }
+    const tile = this.board.grid[idx];
+    let action;
     if (tile.isHidden)
-      const action = tile.getAction();//flag or open
+      action = await tile.getAction();//flag or open
     else {
       console.log("Nah yo, this spot has already been opened!")
       return playTurn();
@@ -61,8 +67,9 @@ class Game {
     this.makeMove(idx, action);
   }
 }
+const board = new Board(10, 10);
+const game = new Game(board);
+game.playTurn();
 // let g = new Game(8);
-module.exports = {
-  g: Game
-}
+
 // let g = new Game(9)

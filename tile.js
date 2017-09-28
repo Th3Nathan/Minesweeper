@@ -13,6 +13,10 @@ class Tile {
     this.isBomb = isBomb;
   }
 
+  validAction(action){
+    return action == "R" || action == "F"
+  }
+
   getAction(){
     return new Promise((res, rej) => {
       const rl = readline();
@@ -21,7 +25,7 @@ class Tile {
         if (this.validAction(input)) res(input);
         else {
           console.log("Invalid action, please enter either F for toggling flag or R to open the space");
-          return this.getAction();
+          res(this.getAction());
         }
       });
     });
@@ -41,3 +45,4 @@ class Tile {
 }
 
 Tile.prototype.flaggedCount = 0;
+module.exports = { Tile };

@@ -1,9 +1,14 @@
 // render, open(pos), initialize(size), populate, reset, isWon, revealBombs,
+const Tile = require("./tile.js").Tile;
 class Board {
   constructor(rows, cols){
     this.rows = rows;
     this.cols = cols;
-    this.grid = Array.new(rows * cols);
+    this.grid = new Array(rows * cols);
+    //for now set all to no bomb, eventually do it randomly
+    for (let i = 0; i < this.grid.length; i++){
+      this.grid[i] = new Tile(false);
+    }
   }
 
   isOpen(idx){
@@ -27,7 +32,14 @@ class Board {
     return idx >= 0 && idx < this.grid.length;
   }
 
-  index(row, col){
-    return (row - 1 * this.cols) + col - 1;
+  index(rowCol){
+    //throw error if off the board
+    const idx = ((rowCol.row - 1) * this.cols) + rowCol.col - 1;
+    if (idx < 0 || idx > this.grid.length - 1)
+      throw "out of bounds";
+    else
+      return idx;
   }
 }
+
+module.exports = { Board };
